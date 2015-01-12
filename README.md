@@ -24,6 +24,16 @@ This image provides 2 options:
 2. Single container for Unifi Controller with data stored in a *docker data
    volume*
 
+# Leaning Points
+I moved existing UAPs to the new controller by resetting them to factory
+defaults.  To do this I ssh into them using the existing (old) credentials, and
+issued the `set-default` command which performs a factory reset.  I did have
+some problems getting them to be shown up in the Unifi Controller UI
+(Discovered).  I configured my local DNS to include an entry for the host
+“unifi” pointing to the machine hosting the controller, which seemed to resolve
+these problems.  However I also enabled port 27117 at some point so am not sure
+whether that had anything to do with the success...
+
 # Configure and Run
 
 ## Option 1 - Local data
@@ -35,6 +45,9 @@ This image provides 2 options:
 ### Start the Unifi Controller
 
     sudo docker run -d -p 3478:3478/udp -p 8080:8080 -p 8081:8081 -p 8843:8843 -p 8443:8443 -p 8880:8880 vanceb/unifi
+
+You may also want to try adding port 27117 if you are having issues, but I seem
+to be OK without it...
 
 ## Option 2 - Data in a persistent docker volume
 
