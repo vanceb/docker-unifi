@@ -1,4 +1,5 @@
-# Dockerfile to create a Ubiquity Controller
+# Dockerfile to create a Ubiquity Unifi Controller
+# The aim was to create a build that could use a separate data volume
 
 FROM debian:squeeze
 MAINTAINER vanceb <vance@axxe.co.uk>
@@ -16,16 +17,19 @@ RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com C0A52C50 7F0C
 # Update sources and install Unifi Controller, which pulls MongoDB and other dependencies
 RUN apt-get update && apt-get -y install unifi
 
-# Unifi starts it's own instance of MongoDB so let's make sure we don't run
-# the standard copy we have just installed
-# TODO...
-
 # Copy the setup script for the data container
 COPY unifi/ /unifi/
 
 # Repoint the symlinks for logs and data
 RUN rm /usr/lib/unifi/data && ln -s /unifi/data /usr/lib/unifi/data
 RUN rm /usr/lib/unifi/logs && ln -s /unifi/logs /usr/lib/unifi/logs
+
+# Copy the initial setup files into these new locations
+# so that this container could be run without a separate data container
+# This step is replicated with a `docker run` command to populate the container
+# See the README.md for details
+RUN mkdir -p /unifi/data && cp -r /var/lib/unifi/* /unifi/data/
+RUN mkdir -p /unifi/logs && cp -r /var/log/unifi/* /unifi/logs/
 
 # Expose the ports necessary for the Unifi Controller
 # http://wiki.ubnt.com/UniFi_FAQ#How_can_I_run_UniFi_Controller_on_different_ports
