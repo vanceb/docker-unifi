@@ -68,4 +68,4 @@ to be OK without it...
 
 ### Start the Unifi Controller
 
-    sudo docker run -d -p 3478:3478/udp -p 8080:8080 -p 8081:8081 -p 8843:8843 -p 8443:8443 -p 8880:8880 --volumes-from data-unifi --name unifi-controller vanceb/unifi
+    sudo docker run -d --restart always -p 3478:3478/udp -p 8080:8080 -p 8081:8081 -p 8843:8843 -p 8443:8443 -p 8880:8880 --volumes-from data-unifi --name unifi-controller vanceb/unifi
